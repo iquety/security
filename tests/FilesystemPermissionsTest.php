@@ -14,11 +14,12 @@ class FilesystemPermissionsTest extends TestCase
     public function changePermissions(): void
     {
         $instance = new Filesystem(__DIR__ . '/structure');
-        $instance->changePermissions('file-zero.txt', 0644);
-        $this->assertEquals('0644', $instance->getFilePermissions('file-zero.txt'));
 
         $instance->changePermissions('file-zero.txt', 0444);
         $this->assertEquals('0444', $instance->getFilePermissions('file-zero.txt'));
+
+        $instance->changePermissions('file-zero.txt', 0644);
+        $this->assertEquals('0644', $instance->getFilePermissions('file-zero.txt'));
     }
 
     // /** @test */
@@ -46,6 +47,7 @@ class FilesystemPermissionsTest extends TestCase
     public function isWritableObject(): void
     {
         $instance = new Filesystem(__DIR__ . '/structure');
+        $instance->changePermissions('file-zero.txt', 0777);
         $this->assertTrue($instance->isWritable('file-zero.txt'));
     }
 
