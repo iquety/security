@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Tests;
 
-use Freep\Security\Filesystem;
+use Freep\Security\Path;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
-class FilesystemPathsTest extends TestCase
+class PathTest extends TestCase
 {
     /** @return array<mixed> */
     public function relativePathList(): array
@@ -22,19 +22,28 @@ class FilesystemPathsTest extends TestCase
             [ __DIR__ . '/structure/./' ],
             [ __DIR__ . '/structure/../' ],
             [ __DIR__ . '/structure/..' ],
+            [ 'level-two/../file-one.txt' ],
         ];
     }
 
-    /** @return array<mixed> */
-    public function absolutePathList(): array
+    /**
+     * @test
+     * @dataProvider relativePathList
+    */
+    public function isRelativePath(string $path): void
     {
-        return [
-            [ '/' ],
-            [ __DIR__ ],
-            [ __DIR__ . '/structure' ],
-            [ __DIR__ . '/structure/level-one' ],
-            [ __DIR__ . '/structure/level-one/level-two' ],
-        ];
+        $instance = new Path($path);
+        $this->assertTrue($instance->isRelativePath());
+    }
+
+    /**
+     * @test
+     * @dataProvider absolutePathList
+    */
+    public function isNotRelativePath(string $path): void
+    {
+        $instance = new Path($path);
+        $this->assertFalse($instance->isRelativePath());
     }
 
     /** @return array<mixed> */
@@ -72,56 +81,48 @@ class FilesystemPathsTest extends TestCase
     }
 
     /**
-     * @test 
-     * @dataProvider relativePathList
-    */
-    public function isRelativePath(string $path): void
-    {
-        $instance = new Filesystem(__DIR__);
-        $this->assertTrue($instance->isRelativePath($path));
-    }
-
-    /**
-     * @test 
-     * @dataProvider absolutePathList
-    */
-    public function isNotRelativePath(string $path): void
-    {
-        $instance = new Filesystem(__DIR__);
-        $this->assertFalse($instance->isRelativePath($path));
-    }
-
-    /**
-     * @test 
+     * @test
      * @dataProvider externalPathList
     */
     public function isNotLocalPath(string $path): void
     {
-        $instance = new Filesystem(__DIR__);
-        $this->assertFalse($instance->isLocalPath($path));
+        $instance = new Path($path);
+        $this->assertFalse($instance->isLocalPath());
+    }
+
+    /** @return array<mixed> */
+    public function absolutePathList(): array
+    {
+        return [
+            [ '/' ],
+            [ __DIR__ ],
+            [ __DIR__ . '/structure' ],
+            [ __DIR__ . '/structure/level-one' ],
+            [ __DIR__ . '/structure/level-one/level-two' ],
+        ];
     }
 
     /**
-     * @test 
+     * @test
      * @dataProvider relativePathList
      * @dataProvider absolutePathList
     */
     public function isLocalPath(string $path): void
     {
-        $instance = new Filesystem(__DIR__);
-        $this->assertTrue($instance->isLocalPath($path));
+        $instance = new Path($path);
+        $this->assertTrue($instance->isLocalPath());
     }
 
     /** @return array<mixed> */
     public function contextualizedPathList(): array
     {
         return [
-            'level zero' => [ 
+            'level zero' => [
                 __DIR__ . '/structure',
                 'file-zero.txt',
                 __DIR__ . '/structure/file-zero.txt'
             ],
-            'level one' => [ 
+            'level one' => [
                 __DIR__ . '/structure/level-one',
                 'file-one.txt',
                 __DIR__ . '/structure/level-one/file-one.txt'
@@ -135,8 +136,35 @@ class FilesystemPathsTest extends TestCase
                 __DIR__ . '/structure/level-one',
                 'level-two/../file-one.txt',
                 __DIR__ . '/structure/level-one/file-one.txt'
-            ],
+            ]
         ];
+    }
+
+    /**
+     * @test
+     * @dataProvider contextualizedPathList
+     */
+    public function getRealPath(string $contextPath, string $path, string $fullPath): void
+    {
+        $instance = new Path($path);
+        $this->assertEquals($fullPath, $instance->getRealPath($contextPath));
+    }
+
+    /** @test */
+    public function getRealPathWithoutContext(): void
+    {
+        $instance = new Path(__DIR__ . '/structure/level-one');
+        $this->assertEquals(__DIR__ . '/structure/level-one', $instance->getRealPath());
+    }
+
+    /** @test */
+    public function getRealPathWithoutContextException(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('The path without context must be absolute');
+
+        $instance = new Path('structure/level-one');
+        $instance->getRealPath();
     }
 
     /** @return array<mixed> */
@@ -150,16 +178,6 @@ class FilesystemPathsTest extends TestCase
 
     /**
      * @test
-     * @dataProvider contextualizedPathList
-     */
-    public function getRealPath(string $contextPath, string $path, string $fullPath): void
-    {
-        $instance = new Filesystem($contextPath);
-        $this->assertEquals($fullPath, $instance->getRealPath($path));
-    }
-
-    /**
-     * @test
      * @dataProvider decontextualizedPathList
      */
     public function getRealPathException(string $contextPath, string $path): void
@@ -167,9 +185,29 @@ class FilesystemPathsTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The given path is out of context');
 
-        $instance = new Filesystem($contextPath);
-        $instance->getRealPath($path);
+        $instance = new Path($path);
+        $instance->getRealPath($contextPath);
     }
+
+    /** @test */
+    public function getRealPathAbsoluteException(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('The context path must be absolute');
+
+        $instance = new Path('any/path');
+        $instance->getRealPath('/../path');
+    }
+
+    // /** @test */
+    // public function getRealPathLocalException(): void
+    // {
+    //     $this->expectException(InvalidArgumentException::class);
+    //     $this->expectExceptionMessage('The context path must be local');
+
+    //     $instance = new Path('any/path');
+    //     $instance->getRealPath('http://host.com');
+    // }
 
     /** @return array<mixed> */
     public function formatRealPathList(): array
@@ -193,26 +231,7 @@ class FilesystemPathsTest extends TestCase
      */
     public function formatRealPath(string $contextPath, string $path): void
     {
-        $instance = new Filesystem($contextPath);
-        $this->assertEquals(__DIR__ . '/structure/level-one', $instance->getRealPath($path));
-    }
-
-    /** @return array<mixed> */
-    public function formatContextPathList(): array
-    {
-        return [
-            [ __DIR__ . '/structure' ],
-            [ __DIR__ . '/structure/' ],
-        ];
-    }
-
-    /** 
-     * @test
-     * @dataProvider formatContextPathList
-     */
-    public function contextPath(string $contextPath): void
-    {
-        $instance = new Filesystem($contextPath);
-        $this->assertEquals(__DIR__ . '/structure', $instance->getContextPath());
+        $instance = new Path($path);
+        $this->assertEquals(__DIR__ . '/structure/level-one', $instance->getRealPath($contextPath));
     }
 }

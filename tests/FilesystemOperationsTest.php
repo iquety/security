@@ -14,14 +14,12 @@ class FilesystemOperationsTest extends TestCase
     public function changePermissions(): void
     {
         $this->markTestIncomplete();
-        $this->assertTrue(true);
     }
 
     /** @test */
     public function changePermissionsException(): void
     {
         $this->markTestIncomplete();
-        $this->assertTrue(true);
     }
 
     /** @test */
@@ -38,48 +36,41 @@ class FilesystemOperationsTest extends TestCase
     public function makeDirectoryLocalPathException(): void
     {
         $this->markTestIncomplete();
-        $this->assertTrue(true);
     }
 
     /** @test */
     public function makeDirectoryRelativePathException(): void
     {
         $this->markTestIncomplete();
-        $this->assertTrue(true);
     }
 
     /** @test */
     public function makeDirectoryOperationException(): void
     {
         $this->markTestIncomplete();
-        $this->assertTrue(true);
     }
 
     /** @test */
     public function setFileContents(): void
     {
         $this->markTestIncomplete();
-        $this->assertTrue(true);
     }
 
     /** @test */
     public function setFileContentsException(): void
     {
         $this->markTestIncomplete();
-        $this->assertTrue(true);
     }
 
     /** @test */
     public function appendFileContents(): void
     {
         $this->markTestIncomplete();
-        $this->assertTrue(true);
     }
 
     /** @test */
     public function appendFileContentsException(): void
     {
         $this->markTestIncomplete();
-        $this->assertTrue(true);
     }
 }

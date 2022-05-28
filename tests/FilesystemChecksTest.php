@@ -43,13 +43,11 @@ class FilesystemChecksTest extends TestCase
     public function isReadableObject(): void
     {
         $this->markTestIncomplete();
-        $this->assertTrue(true);
     }
 
     /** @test */
     public function isWritableObject(): void
     {
         $this->markTestIncomplete();
-        $this->assertTrue(true);
     }
 }

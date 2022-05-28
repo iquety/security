@@ -29,7 +29,7 @@ class FilesystemGettersTest extends TestCase
         $instance = new Filesystem(__DIR__ . '/structure');
         $instance->getDirectoryContents('not-exists');
     }
-    
+
     /** @test */
     public function getFileRows(): void
     {
