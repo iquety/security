@@ -10,6 +10,16 @@ use PHPUnit\Framework\TestCase;
 
 class PathTest extends TestCase
 {
+    /** @test */
+    public function getDirectory(): void
+    {
+        $instance = new Path('../level-two/level-one/filename.txt');
+        $this->assertEquals('../level-two/level-one', $instance->getDirectory());
+        $this->assertEquals('../level-two', $instance->getDirectory(2));
+        $this->assertEquals('..', $instance->getDirectory(3));
+        $this->assertEquals('', $instance->getDirectory(4));
+    }
+
     /** @return array<mixed> */
     public function relativePathList(): array
     {
@@ -182,8 +192,14 @@ class PathTest extends TestCase
      */
     public function getRealPathException(string $contextPath, string $path): void
     {
+        $fullPath = $contextPath
+            . DIRECTORY_SEPARATOR
+            . ltrim($path, DIRECTORY_SEPARATOR);
+
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('The given path is out of context');
+        $this->expectExceptionMessage(
+            "The given path '{$fullPath}' is out of context '{$contextPath}'"
+        );
 
         $instance = new Path($path);
         $instance->getRealPath($contextPath);

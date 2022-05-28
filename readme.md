@@ -8,7 +8,11 @@
 
 ## Synopsis
 
-Mono mo mono monomono nomo mono.
+This repository contains a library with safe manipulations for various purposes.
+
+The creation of these functionalities aims to inhibit the implementation of unsafe routines by developers with little experience or unconcerned with the necessary precautions for the security of web applications.
+
+Contains tools for handling and manipulating directories, files, paths, etc.
 
 For detailed information, consult the documentation in [English](docs/en/index.md) or [Portuguese](docs/pt-br/indice.md). See also this readme in [Portuguese](docs/pt-br/leiame.md).
 

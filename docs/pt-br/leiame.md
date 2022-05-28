@@ -2,7 +2,11 @@
 
 ## Sinopse
 
-Mono mo mono monomono nomo mono.
+Este repositório contém uma biblioteca com manipulações seguras para diversos propósitos. 
+
+A criação dessas funcionalidades objetivam inibir a implementação de rotinas inseguras por desenvolvedores com pouca experiência ou despreocupados com os devidos cuidados necessários para a segurança de aplicações web.  
+
+Contém ferramentas para tratamento e manipulação de diretórios, arquivos, caminhos etc.
 
 Para informações detalhadas, consulte a documentação em [Inglês](../en/index.md) ou em [Português](indice.md). Veja também este 'readme' em [Inglês](../../readme.md).
 

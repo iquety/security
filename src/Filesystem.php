@@ -19,10 +19,6 @@ class Filesystem
             throw new InvalidArgumentException('The context path must be absolute');
         }
 
-        if ($context->isLocalPath() === false) {
-            throw new InvalidArgumentException('The context path must be local');
-        }
-
         $this->contextPath = trim($contextPath);
         $this->contextPath = rtrim($contextPath, DIRECTORY_SEPARATOR);
     }
@@ -36,11 +32,17 @@ class Filesystem
     public function getDirectoryContents(string $directoryPath): array
     {
         $directory = new Path($directoryPath);
-        $path = $directory->getRealPath($this->getContextPath());
 
-        $scanned = scandir($path);
+        try {
+            $path = $directory->getRealPath($this->getContextPath());
+        } catch (InvalidArgumentException) {
+            $dirname = $this->getContextPath() . DIRECTORY_SEPARATOR . $directoryPath;
+            throw new RuntimeException("Directory {$dirname} does not exist");
+        }
 
-        if ($scanned === false) {
+        $scanned = (array)scandir($path);
+
+        if ($scanned === ['.',  '..']) {
             return [];
         }
 
@@ -57,17 +59,39 @@ class Filesystem
         return $list;
     }
 
+    /** @return array<int,string> */
+    public function getDirectoryFiles(string $directoryPath): array
+    {
+        $files = array_filter($this->getDirectoryContents($directoryPath), fn($path) => is_file($path));
+        return array_values($files);
+    }
+
+    /** @return array<int,string> */
+    public function getDirectorySubdirs(string $directoryPath): array
+    {
+        $dirs = array_filter($this->getDirectoryContents($directoryPath), fn($path) => is_dir($path));
+        return array_values($dirs);
+    }
+
     public function getFileContents(string $filePath): string
     {
         $file = new Path($filePath);
-        $path = $file->getRealPath($this->getContextPath());
+
+        try {
+            $path = $file->getRealPath($this->getContextPath());
+        } catch (InvalidArgumentException) {
+            $filename = $this->getContextPath() . DIRECTORY_SEPARATOR . $filePath;
+            throw new RuntimeException("File {$filename} does not exist");
+        }
 
         $contents = file_get_contents($path);
 
         if ($contents === false) {
+            // @codeCoverageIgnoreStart
             throw new RuntimeException(
                 'Could not get the contents of the file'
             );
+            // @codeCoverageIgnoreEnd
         }
 
         return $contents;
@@ -77,9 +101,23 @@ class Filesystem
     public function getFileRows(string $filePath): array
     {
         $file = new Path($filePath);
-        $path = $file->getRealPath($this->getContextPath());
+        try {
+            $path = $file->getRealPath($this->getContextPath());
+        } catch (InvalidArgumentException) {
+            $filename = $this->getContextPath() . DIRECTORY_SEPARATOR . $filePath;
+            throw new RuntimeException("File {$filename} does not exist");
+        }
 
         return array_map(fn($row) => trim($row), file($path) ?: []);
+    }
+
+    public function getFilePermissions(string $filePath): string
+    {
+        $file = new Path($filePath);
+        $path = $file->getRealPath($this->getContextPath());
+
+        $permissions = fileperms($path);
+        return substr(sprintf('%o', $permissions), -4);
     }
 
     public function isDirectory(string $directoryPath): bool
@@ -139,10 +177,14 @@ class Filesystem
      * configuração desejada, onde 4 = Ler, 2 = Escrever e 1 = Executar.
      *
      * Por exemplo:
-     * 4 = Ler
-     * 5 = Ler (4) + Executar (1)
-     * 6 = Ler (4) + Escrever (2)
-     * 7 = Ler (4) + Escrever (2) + Executar (7)
+     * 0    cannot read, write or execute
+     * 1    can only execute
+     * 2    can only write
+     * 3    can write and execute
+     * 4    can only read
+     * 5    can read and execute
+     * 6    can read and write
+     * 7    can read, write and execute
      *
      * O argumento $octalPermissions deve ser formado por 4 digitos, por ex: 0765,
      * onde 7 para o dono do arquivo, 6 para o grupo e 5 para os outros usuários
@@ -156,10 +198,14 @@ class Filesystem
         $path = $target->getRealPath($this->getContextPath());
 
         if (chmod($path, $octalPermissions) === false) {
+            // @codeCoverageIgnoreStart
             throw new RuntimeException(
                 'Could not change requested object permissions'
             );
+            // @codeCoverageIgnoreEnd
         }
+
+        clearstatcache();
     }
 
     public function makeDirectory(string $directoryPath): void
@@ -176,7 +222,7 @@ class Filesystem
             );
         }
 
-        if ($path->isRelativePath() === true) {
+        if ((new Path(DIRECTORY_SEPARATOR . $directoryPath))->isRelativePath() === true) {
             throw new InvalidArgumentException(
                 'The directory path to be created cannot be relative'
             );
@@ -185,9 +231,11 @@ class Filesystem
         $fullpath = $this->getContextPath() . DIRECTORY_SEPARATOR . $directoryPath;
 
         if (mkdir($fullpath, 0777, true) === false) {
+            // @codeCoverageIgnoreStart
             throw new RuntimeException(
                 'The relevant permissions prevent creating the directory'
             );
+            // @codeCoverageIgnoreEnd
         }
     }
 
@@ -206,11 +254,25 @@ class Filesystem
      */
     private function touchFile(string $filePath, string $contents, int $flag = 0): void
     {
-        $file = new Path($filePath);
-        $path = $file->getRealPath($this->getContextPath());
+        if ((new Path(DIRECTORY_SEPARATOR . $filePath))->isRelativePath() == true) {
+            throw new InvalidArgumentException('The file path path must be absolute');
+        }
 
-        if (file_put_contents($path, $contents, $flag) === false) {
+        $securePath = $this->getContextPath()
+            . DIRECTORY_SEPARATOR
+            . ltrim($filePath, DIRECTORY_SEPARATOR);
+
+        $directory = (new Path($filePath))->getDirectory();
+        $directory = str_replace($this->getContextPath(), '', $directory);
+
+        if ($this->isDirectory($directory) === false) {
+            $this->makeDirectory($directory);
+        }
+
+        if (file_put_contents($securePath, $contents, $flag) === false) {
+            // @codeCoverageIgnoreStart
             throw new RuntimeException('Could not add data to file');
+            // @codeCoverageIgnoreEnd
         }
     }
 }
