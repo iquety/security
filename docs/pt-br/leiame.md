@@ -12,12 +12,12 @@ Para informações detalhadas, consulte a documentação em [Inglês](../en/inde
 
 ## Características
 
--   Feito para o PHP 8.0 ou superior;
--   Codificado com boas práticas e máxima qualidade;
--   Bem documentado e amigável para IDEs;
--   Feito com TDD (Test Driven Development);
--   Implementado com testes de unidade usando PHPUnit;
--   Feito com :heart: &amp; :coffee:.
+- Feito para o PHP 8.0 ou superior;
+- Codificado com boas práticas e máxima qualidade;
+- Bem documentado e amigável para IDEs;
+- Feito com TDD (Test Driven Development);
+- Implementado com testes de unidade usando PHPUnit;
+- Feito com :heart: &amp; :coffee:.
 
 ## Sumário
 
