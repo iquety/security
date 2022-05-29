@@ -3,10 +3,9 @@
 ![PHP Version](https://img.shields.io/badge/php-%5E8.0-blue)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 ![TDD](https://img.shields.io/badge/tdd-Tested%20100%25-blue)
-[![Follow](https://img.shields.io/github/followers/ricardopedias?label=Siga%20no%20GitHUB&style=social)](https://github.com/ricardopedias)
-[![Twitter](https://img.shields.io/twitter/follow/ricardopedias?label=Siga%20no%20Twitter)](https://twitter.com/ricardopedias)
 [![Codacy Badge](https://app.codacy.com/project/badge/Coverage/54e7b0e49f964976913d40f690249f45)](https://www.codacy.com/gh/ricardopedias/freep-security/dashboard?utm_source=github.com&utm_medium=referral&utm_content=ricardopedias/freep-security&utm_campaign=Badge_Coverage)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/54e7b0e49f964976913d40f690249f45)](https://www.codacy.com/gh/ricardopedias/freep-security/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ricardopedias/freep-security&amp;utm_campaign=Badge_Grade)
+
 
 ## Synopsis
 
