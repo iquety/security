@@ -5,7 +5,6 @@
 [![Codacy Badge](https://app.codacy.com/project/badge/Coverage/54e7b0e49f964976913d40f690249f45)](https://www.codacy.com/gh/ricardopedias/freep-security/dashboard?utm_source=github.com&utm_medium=referral&utm_content=ricardopedias/freep-security&utm_campaign=Badge_Coverage)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/54e7b0e49f964976913d40f690249f45)](https://www.codacy.com/gh/ricardopedias/freep-security/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ricardopedias/freep-security&amp;utm_campaign=Badge_Grade)
 
-
 ## Synopsis
 
 This repository contains a library with safe manipulations for various purposes.
@@ -18,16 +17,16 @@ For detailed information, consult the documentation in [English](docs/en/index.m
 
 ## Characteristics
 
--  Made for PHP 8.0 or higher;
--  Codified with best practices and maximum quality;
--  Well documented and IDE friendly;
--  Made with TDD (Test Driven Development);
--  Implemented with unit tests using PHPUnit;
--  Made with :heart: &amp; :coffee:.
+- Made for PHP 8.0 or higher;
+- Codified with best practices and maximum quality;
+- Well documented and IDE friendly;
+- Made with TDD (Test Driven Development);
+- Implemented with unit tests using PHPUnit;
+- Made with :heart: &amp; :coffee:.
 
 ## Summary
 
--  [Mono mo](docs/en/01-monomono.md)
+- [Mono mo](docs/en/01-monomono.md)
 
 ## Creditos
 
