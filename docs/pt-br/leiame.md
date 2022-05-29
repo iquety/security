@@ -21,7 +21,7 @@ Para informações detalhadas, consulte a documentação em [Inglês](../en/inde
 
 ## Sumário
 
--  [Mono mo](docs/en/01-monomono.md)
+- [Mono mo](docs/en/01-monomono.md)
 
 ## Creditos
 
