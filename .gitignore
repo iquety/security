@@ -5,3 +5,4 @@ clover.xml
 coverage/
 vendor/
 tests/structure/runtime/
+super-linter.log
