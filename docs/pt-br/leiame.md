@@ -2,9 +2,9 @@
 
 ## Sinopse
 
-Este repositório contém uma biblioteca com manipulações seguras para diversos propósitos. 
+Este repositório contém uma biblioteca com manipulações seguras para diversos propósitos.
 
-A criação dessas funcionalidades objetivam inibir a implementação de rotinas inseguras por desenvolvedores com pouca experiência ou despreocupados com os devidos cuidados necessários para a segurança de aplicações web.  
+A criação dessas funcionalidades objetivam inibir a implementação de rotinas inseguras por desenvolvedores com pouca experiência ou despreocupados com os devidos cuidados necessários para a segurança de aplicações web.
 
 Contém ferramentas para tratamento e manipulação de diretórios, arquivos, caminhos etc.
 
