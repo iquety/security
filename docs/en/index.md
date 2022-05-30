@@ -1,6 +1,6 @@
 # Freep Console: Documentação
 
-[◂ Back to readme](../readme.md) | [Under preparation... ▸](index.md)
+[◂ Back to readme](../../readme.md) | [Under preparation... ▸](index.md)
 -- | --
 
 ## Introduction
