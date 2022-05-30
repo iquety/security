@@ -24,10 +24,6 @@ For detailed information, consult the documentation in [English](docs/en/index.m
 - Implemented with unit tests using PHPUnit;
 - Made with :heart: &amp; :coffee:.
 
-## Summary
-
-- [Mono mo](docs/en/01-monomono.md)
-
 ## Creditos
 
 [Ricardo Pereira Dias](https://www.ricardopedias.com.br)

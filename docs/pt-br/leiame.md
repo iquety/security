@@ -19,10 +19,6 @@ Para informações detalhadas, consulte a documentação em [Inglês](../en/inde
 - Implementado com testes de unidade usando PHPUnit;
 - Feito com :heart: &amp; :coffee:.
 
-## Sumário
-
-- [Mono mo](docs/en/01-monomono.md)
-
 ## Creditos
 
 [Ricardo Pereira Dias](https://www.ricardopedias.com.br)
