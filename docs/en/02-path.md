@@ -1,6 +1,6 @@
 # Path
 
-[◂ Filesystem](01-filesystem.md) | [Back to Index ▸](indice.md)
+[◂ Filesystem](01-filesystem.md) | [Back to Index ▸](index.md)
 -- | --
 
 ### Functionalities
@@ -19,5 +19,5 @@ The available methods are:
 - isLocalPath
 - isRelativePath
 
-[◂ Filesystem](01-filesystem.md) | [Back to Index ▸](indice.md)
+[◂ Filesystem](01-filesystem.md) | [Back to Index ▸](index.md)
 -- | --

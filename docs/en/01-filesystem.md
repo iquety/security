@@ -1,6 +1,6 @@
 # Filesystem
 
-[◂ Back to Index](indice.md) | [Path... ▸](02-path.md)
+[◂ Back to Index](index.md) | [Path... ▸](02-path.md)
 -- | --
 
 ## Goal
@@ -33,5 +33,5 @@ The available methods are:
 - setFileContents
 - appendFileContents
 
-[◂ Back to Index](indice.md) | [Path... ▸](02-path.md)
+[◂ Back to Index](index.md) | [Path... ▸](02-path.md)
 -- | --
