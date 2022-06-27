@@ -1,4 +1,4 @@
-# Freep Console: Documentação
+# Freep Security: Documentação
 
 [◂ Voltar ao Leiame](leiame.md) | [Em fase de elaboração... ▸](indice.md)
 -- | --

@@ -1,4 +1,4 @@
-# Freep Console: Documentação
+# Freep Security: Documentation
 
 [◂ Back to readme](../../readme.md) | [Under preparation... ▸](index.md)
 -- | --
