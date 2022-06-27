@@ -1,12 +1,13 @@
-# Freep Security: Documentation
+# Freep Security: Documentação
 
-[◂ Back to readme](../../readme.md) | [Under preparation... ▸](index.md)
+[◂ Back to readme](../../readme.md) | [Filesystem ▸](01-filesystem.md)
 -- | --
 
-## Introduction
+## Introdução
 
-Welcome to the Freep Console library documentation. Here you will find the necessary information to use the available features and make the most of the library.
+Bem vindo(a) à documentação da biblioteca Freep Security. Aqui você encontra as informações necessárias para utilizar as funcionalidades disponíveis e usufruir ao máximo da biblioteca.
 
-### Contents
+### Conteúdo
 
-Under preparation...
+- [Filesystem](01-filesystem.md)
+- [Path](02-path.md)

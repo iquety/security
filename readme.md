@@ -24,6 +24,10 @@ For detailed information, consult the documentation in [English](docs/en/index.m
 - Implemented with unit tests using PHPUnit;
 - Made with :heart: &amp; :coffee:.
 
+### Contents
+
+- [Filesystem](docs/en/01-filesystem.md)
+- [Path](docs/en/02-path.md)
 ## Creditos
 
 [Ricardo Pereira Dias](https://www.ricardopedias.com.br)
