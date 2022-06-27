@@ -28,13 +28,13 @@ class Filesystem
         return $this->contextPath;
     }
 
-    /** @return array<int,string> */
+    /** @return array<int,Path> */
     public function getDirectoryContents(string $directoryPath): array
     {
         $directory = new Path($directoryPath);
 
         try {
-            $path = $directory->getRealPath($this->getContextPath());
+            $path = $directory->getAbsolutePath($this->getContextPath());
         } catch (InvalidArgumentException) {
             $dirname = $this->getContextPath() . DIRECTORY_SEPARATOR . $directoryPath;
             throw new RuntimeException("Directory {$dirname} does not exist");
@@ -53,23 +53,29 @@ class Filesystem
                 continue;
             }
 
-            $list[] = $path . DIRECTORY_SEPARATOR . $relativePath;
+            $list[] = new Path($path . DIRECTORY_SEPARATOR . $relativePath);
         }
 
         return $list;
     }
 
-    /** @return array<int,string> */
+    /** @return array<int,Path> */
     public function getDirectoryFiles(string $directoryPath): array
     {
-        $files = array_filter($this->getDirectoryContents($directoryPath), fn($path) => is_file($path));
+        $files = array_filter(
+            $this->getDirectoryContents($directoryPath),
+            fn($path) => is_file($path->getPath())
+        );
         return array_values($files);
     }
 
-    /** @return array<int,string> */
+    /** @return array<int,Path> */
     public function getDirectorySubdirs(string $directoryPath): array
     {
-        $dirs = array_filter($this->getDirectoryContents($directoryPath), fn($path) => is_dir($path));
+        $dirs = array_filter(
+            $this->getDirectoryContents($directoryPath),
+            fn($path) => is_dir($path->getPath())
+        );
         return array_values($dirs);
     }
 
@@ -78,7 +84,7 @@ class Filesystem
         $file = new Path($filePath);
 
         try {
-            $path = $file->getRealPath($this->getContextPath());
+            $path = $file->getAbsolutePath($this->getContextPath());
         } catch (InvalidArgumentException) {
             $filename = $this->getContextPath() . DIRECTORY_SEPARATOR . $filePath;
             throw new RuntimeException("File {$filename} does not exist");
@@ -102,7 +108,7 @@ class Filesystem
     {
         $file = new Path($filePath);
         try {
-            $path = $file->getRealPath($this->getContextPath());
+            $path = $file->getAbsolutePath($this->getContextPath());
         } catch (InvalidArgumentException) {
             $filename = $this->getContextPath() . DIRECTORY_SEPARATOR . $filePath;
             throw new RuntimeException("File {$filename} does not exist");
@@ -114,7 +120,7 @@ class Filesystem
     public function getFilePermissions(string $filePath): string
     {
         $file = new Path($filePath);
-        $path = $file->getRealPath($this->getContextPath());
+        $path = $file->getAbsolutePath($this->getContextPath());
 
         $permissions = fileperms($path);
         return substr(sprintf('%o', $permissions), -4);
@@ -125,7 +131,7 @@ class Filesystem
         $directory = new Path($directoryPath);
 
         try {
-            $path = $directory->getRealPath($this->getContextPath());
+            $path = $directory->getAbsolutePath($this->getContextPath());
         } catch (InvalidArgumentException) {
             return false;
         }
@@ -138,7 +144,7 @@ class Filesystem
         $file = new Path($filePath);
 
         try {
-            $path = $file->getRealPath($this->getContextPath());
+            $path = $file->getAbsolutePath($this->getContextPath());
         } catch (InvalidArgumentException) {
             return false;
         }
@@ -151,7 +157,7 @@ class Filesystem
         $target = new Path($targetPath);
 
         try {
-            $path = $target->getRealPath($this->getContextPath());
+            $path = $target->getAbsolutePath($this->getContextPath());
         } catch (InvalidArgumentException) {
             return false;
         }
@@ -164,7 +170,7 @@ class Filesystem
         $target = new Path($targetPath);
 
         try {
-            $path = $target->getRealPath($this->getContextPath());
+            $path = $target->getAbsolutePath($this->getContextPath());
         } catch (InvalidArgumentException) {
             return false;
         }
@@ -195,7 +201,7 @@ class Filesystem
     {
         $target = new Path($targetPath);
 
-        $path = $target->getRealPath($this->getContextPath());
+        $path = $target->getAbsolutePath($this->getContextPath());
 
         if (chmod($path, $octalPermissions) === false) {
             // @codeCoverageIgnoreStart

@@ -154,27 +154,27 @@ class PathTest extends TestCase
      * @test
      * @dataProvider contextualizedPathList
      */
-    public function getRealPath(string $contextPath, string $path, string $fullPath): void
+    public function getAbsolutePath(string $contextPath, string $path, string $fullPath): void
     {
         $instance = new Path($path);
-        $this->assertEquals($fullPath, $instance->getRealPath($contextPath));
+        $this->assertEquals($fullPath, $instance->getAbsolutePath($contextPath));
     }
 
     /** @test */
-    public function getRealPathWithoutContext(): void
+    public function getAbsolutePathWithoutContext(): void
     {
         $instance = new Path(__DIR__ . '/structure/level-one');
-        $this->assertEquals(__DIR__ . '/structure/level-one', $instance->getRealPath());
+        $this->assertEquals(__DIR__ . '/structure/level-one', $instance->getAbsolutePath());
     }
 
     /** @test */
-    public function getRealPathWithoutContextException(): void
+    public function getAbsolutePathWithoutContextException(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The path without context must be absolute');
 
         $instance = new Path('structure/level-one');
-        $instance->getRealPath();
+        $instance->getAbsolutePath();
     }
 
     /** @return array<mixed> */
@@ -190,7 +190,7 @@ class PathTest extends TestCase
      * @test
      * @dataProvider decontextualizedPathList
      */
-    public function getRealPathException(string $contextPath, string $path): void
+    public function getAbsolutePathException(string $contextPath, string $path): void
     {
         $fullPath = $contextPath
             . DIRECTORY_SEPARATOR
@@ -202,27 +202,27 @@ class PathTest extends TestCase
         );
 
         $instance = new Path($path);
-        $instance->getRealPath($contextPath);
+        $instance->getAbsolutePath($contextPath);
     }
 
     /** @test */
-    public function getRealPathAbsoluteException(): void
+    public function getAbsolutePathAbsoluteException(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The context path must be absolute');
 
         $instance = new Path('any/path');
-        $instance->getRealPath('/../path');
+        $instance->getAbsolutePath('/../path');
     }
 
     // /** @test */
-    // public function getRealPathLocalException(): void
+    // public function getAbsolutePathLocalException(): void
     // {
     //     $this->expectException(InvalidArgumentException::class);
     //     $this->expectExceptionMessage('The context path must be local');
 
     //     $instance = new Path('any/path');
-    //     $instance->getRealPath('http://host.com');
+    //     $instance->getAbsolutePath('http://host.com');
     // }
 
     /** @return array<mixed> */
@@ -248,6 +248,6 @@ class PathTest extends TestCase
     public function formatRealPath(string $contextPath, string $path): void
     {
         $instance = new Path($path);
-        $this->assertEquals(__DIR__ . '/structure/level-one', $instance->getRealPath($contextPath));
+        $this->assertEquals(__DIR__ . '/structure/level-one', $instance->getAbsolutePath($contextPath));
     }
 }

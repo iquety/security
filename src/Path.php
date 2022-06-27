@@ -24,6 +24,7 @@ class Path
     {
         if ($path === '') {
             $this->info = [
+                'path'      => '',
                 'directory' => '',
                 'file'      => '',
                 'name'      => '',
@@ -36,6 +37,7 @@ class Path
 
         if ($pathInfo['dirname'] === '.') {
             $this->info = [
+                'path'      => rtrim($path, DIRECTORY_SEPARATOR),
                 'directory' => '',
                 'file'      => '',
                 'name'      => $path,
@@ -45,6 +47,7 @@ class Path
         }
 
         $this->info = [
+            'path'      => rtrim($path, DIRECTORY_SEPARATOR),
             'directory' => $pathInfo['dirname'],
             'file'      => $pathInfo['basename'],
             'name'      => $pathInfo['filename'],
@@ -82,7 +85,12 @@ class Path
         return $this->info['name'];
     }
 
-    public function getRealPath(string $contextPath = ''): string
+    public function getPath(): string
+    {
+        return $this->info['path'];
+    }
+
+    public function getAbsolutePath(string $contextPath = ''): string
     {
         $messageAbsolute = 'The context path must be absolute';
 
@@ -109,6 +117,13 @@ class Path
         }
 
         return $realPath;
+    }
+
+    public function getInsidePath(string $contextPath): string
+    {
+        $absolute = $this->getAbsolutePath($contextPath);
+
+        return str_replace($contextPath . DIRECTORY_SEPARATOR, '', $absolute);
     }
 
     private function getSecurePath(string $contextPath, string $path): string

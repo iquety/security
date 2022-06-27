@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests;
 
 use Freep\Security\Filesystem;
+use Freep\Security\Path;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
@@ -23,8 +24,8 @@ class FilesystemDirectoriesTest extends TestCase
     {
         $instance = new Filesystem(__DIR__ . '/structure');
         $this->assertEquals([
-            __DIR__ . '/structure/level-one/file-one.txt',
-            __DIR__ . '/structure/level-one/level-two'
+            new Path(__DIR__ . '/structure/level-one/file-one.txt'),
+            new Path(__DIR__ . '/structure/level-one/level-two')
         ], $instance->getDirectoryContents('level-one'));
     }
 
@@ -43,7 +44,7 @@ class FilesystemDirectoriesTest extends TestCase
         $instance = new Filesystem(__DIR__ . '/structure');
 
         $this->assertEquals([
-            __DIR__ . '/structure/level-one/file-one.txt',
+            new Path(__DIR__ . '/structure/level-one/file-one.txt'),
         ], $instance->getDirectoryFiles('level-one'));
     }
 
@@ -62,7 +63,7 @@ class FilesystemDirectoriesTest extends TestCase
         $instance = new Filesystem(__DIR__ . '/structure');
 
         $this->assertEquals([
-            __DIR__ . '/structure/level-one/level-two'
+            new Path(__DIR__ . '/structure/level-one/level-two')
         ], $instance->getDirectorySubdirs('level-one'));
     }
 
