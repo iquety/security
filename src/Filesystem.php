@@ -32,6 +32,8 @@ class Filesystem
     {
         $directory = $this->getContextPath()->addNodePath($directoryPath);
 
+        $nodePath = $directory->getNodePath();
+
         try {
             $path = $directory->getAbsolutePath();
         } catch (RuntimeException) {
@@ -39,7 +41,11 @@ class Filesystem
             throw new RuntimeException("Directory {$dirname} does not exist");
         }
 
-        $scanned = (array)scandir($path);
+        $scanned = scandir($path);
+
+        if ($scanned === false) {
+            return [];
+        }
 
         if ($scanned === ['.',  '..']) {
             return [];
@@ -52,7 +58,9 @@ class Filesystem
                 continue;
             }
 
-            $list[] = new Path($path . DIRECTORY_SEPARATOR . $relativePath);
+            $list[] = $this->getContextPath()
+                ->addNodePath($nodePath)
+                ->addNodePath($relativePath);
         }
 
         return $list;

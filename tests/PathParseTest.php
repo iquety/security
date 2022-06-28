@@ -154,6 +154,6 @@ class PathParseTest extends TestCase
         $instance->addNodePath($subpath);
 
         $this->assertEquals($fullpath, $instance->getPath());
-        $this->assertEquals($subpath, $instance->getNodePath());
+        $this->assertEquals(ltrim($subpath, DIRECTORY_SEPARATOR), $instance->getNodePath());
     }
 }

@@ -24,8 +24,8 @@ class FilesystemDirectoriesTest extends TestCase
     {
         $instance = new Filesystem(__DIR__ . '/structure');
         $this->assertEquals([
-            new Path(__DIR__ . '/structure/level-one/file-one.txt'),
-            new Path(__DIR__ . '/structure/level-one/level-two')
+            (new Path(__DIR__ . '/structure'))->addNodePath('level-one/file-one.txt'),
+            (new Path(__DIR__ . '/structure'))->addNodePath('/level-one/level-two')
         ], $instance->getDirectoryContents('level-one'));
     }
 
@@ -44,7 +44,7 @@ class FilesystemDirectoriesTest extends TestCase
         $instance = new Filesystem(__DIR__ . '/structure');
 
         $this->assertEquals([
-            new Path(__DIR__ . '/structure/level-one/file-one.txt'),
+            (new Path(__DIR__ . '/structure'))->addNodePath('level-one/file-one.txt'),
         ], $instance->getDirectoryFiles('level-one'));
     }
 
@@ -63,7 +63,7 @@ class FilesystemDirectoriesTest extends TestCase
         $instance = new Filesystem(__DIR__ . '/structure');
 
         $this->assertEquals([
-            new Path(__DIR__ . '/structure/level-one/level-two')
+            (new Path(__DIR__ . '/structure'))->addNodePath('level-one/level-two')
         ], $instance->getDirectorySubdirs('level-one'));
     }
 

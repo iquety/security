@@ -77,6 +77,8 @@ class Path
             ? $subpath
             : DIRECTORY_SEPARATOR . $subpath;
 
+        $this->nodePath = ltrim($this->nodePath, DIRECTORY_SEPARATOR);
+
         $fullPath    = '';
 
         if ($this->getPath() === '') {
@@ -172,7 +174,7 @@ class Path
 
     public function getNodePath(): string
     {
-        return $this->nodePath;
+        return ltrim($this->nodePath, DIRECTORY_SEPARATOR);
     }
 
     public function getPath(): string
