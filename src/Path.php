@@ -4,55 +4,129 @@ declare(strict_types=1);
 
 namespace Freep\Security;
 
-use InvalidArgumentException;
+use RuntimeException;
 
 class Path
 {
-    private string $path = '';
+    private string $contextPath = '';
+
+    private string $nodePath = '';
 
     /** @var array<string,string> */
     private array $info = [];
 
-    public function __construct(string $path)
+    public function __construct(string $contextPath)
     {
-        $this->path = trim($path);
+        $this->contextPath = trim($contextPath);
 
-        $this->parsePathInfo($this->path);
+        $this->parsePathInfo($this->contextPath);
     }
 
     private function parsePathInfo(string $path): void
     {
-        if ($path === '') {
+        if (in_array($path, ['', DIRECTORY_SEPARATOR]) === true) {
             $this->info = [
-                'path'      => '',
+                'path'      => $path,
                 'directory' => '',
                 'file'      => '',
                 'name'      => '',
                 'extension' => ''
             ];
+
             return;
         }
+
+        $path = rtrim($path, DIRECTORY_SEPARATOR);
 
         $pathInfo = (array)pathinfo($path);
 
         if ($pathInfo['dirname'] === '.') {
             $this->info = [
-                'path'      => rtrim($path, DIRECTORY_SEPARATOR),
+                'path'      => $path,
                 'directory' => '',
                 'file'      => '',
                 'name'      => $path,
                 'extension' => ''
             ];
+
             return;
         }
 
         $this->info = [
-            'path'      => rtrim($path, DIRECTORY_SEPARATOR),
+            'path'      => $path,
             'directory' => $pathInfo['dirname'],
             'file'      => $pathInfo['basename'],
             'name'      => $pathInfo['filename'],
             'extension' => $pathInfo['extension'] ?? ''
         ];
+    }
+
+    public function addNodePath(string $subpath): self
+    {
+        if ($subpath === '') {
+            return $this;
+        }
+
+        if ($this->getExtension() !== '') {
+            throw new RuntimeException('Cannot add a new node to a file path');
+        }
+
+        $subpath = trim($subpath);
+
+        $this->nodePath .= $this->nodePath === ''
+            ? $subpath
+            : DIRECTORY_SEPARATOR . $subpath;
+
+        $fullPath    = '';
+
+        if ($this->getPath() === '') {
+            $fullPath = rtrim($subpath, DIRECTORY_SEPARATOR);
+        }
+
+        if ($this->getPath() === DIRECTORY_SEPARATOR) {
+            $fullPath = DIRECTORY_SEPARATOR . trim($subpath, DIRECTORY_SEPARATOR);
+        }
+
+        if ($fullPath === '') {
+            $fullPath = $this->getPath()
+                . DIRECTORY_SEPARATOR
+                . trim($subpath, DIRECTORY_SEPARATOR);
+        }
+
+        $this->parsePathInfo($fullPath);
+
+        return $this;
+    }
+
+    public function getAbsolutePath(): string
+    {
+        $path = $this->getPath();
+
+        $realPath = realpath($path);
+
+        if ($realPath === false) {
+            throw new RuntimeException("The '$path' path cannot be resolved");
+        }
+
+        if ($this->getNodePath() === '') {
+            return $realPath;
+        }
+
+        $realContext = (string)realpath($this->getContextPath());
+
+        if (str_starts_with($realPath, $realContext) === false) {
+            throw new RuntimeException(
+                "Cannot get absolute path outside "
+                . "the scope of the '{$realContext}' context"
+            );
+        }
+
+        return $realPath;
+    }
+
+    public function getContextPath(): string
+    {
+        return $this->contextPath;
     }
 
     public function getDirectory(int $levels = 1): string
@@ -61,10 +135,21 @@ class Path
             return $this->info['directory'];
         }
 
-        $dirname = dirname($this->path, $levels);
+        $dirname = dirname($this->getPath(), $levels);
 
         if ($dirname === '.') {
-            return '';
+            $dirname = '';
+        }
+
+        if ($this->getNodePath() === '') {
+            return $dirname;
+        }
+
+        if (str_starts_with($dirname, $this->getContextPath()) === false) {
+            throw new RuntimeException(
+                "Cannot get information from a directory outside "
+                . "the scope of the '{$this->contextPath}' context"
+            );
         }
 
         return $dirname;
@@ -85,56 +170,14 @@ class Path
         return $this->info['name'];
     }
 
+    public function getNodePath(): string
+    {
+        return $this->nodePath;
+    }
+
     public function getPath(): string
     {
         return $this->info['path'];
-    }
-
-    public function getAbsolutePath(string $contextPath = ''): string
-    {
-        $messageAbsolute = 'The context path must be absolute';
-
-        if ($contextPath === '') {
-            $contextPath = $this->path;
-            $messageAbsolute = 'The path without context must be absolute';
-        }
-
-        $context = new Path($contextPath);
-
-        if ($context->isRelativePath() === true) {
-            throw new InvalidArgumentException($messageAbsolute);
-        }
-
-        $securePath = $this->getSecurePath($contextPath, $this->path);
-
-        $realPath = realpath($securePath);
-
-        if (
-            $realPath === false // caminho sem resolução
-            || strpos($realPath, $contextPath) === false // caminho acima do contexto
-        ) {
-            throw new InvalidArgumentException("The given path '$securePath' is out of context '$contextPath'");
-        }
-
-        return $realPath;
-    }
-
-    public function getInsidePath(string $contextPath): string
-    {
-        $absolute = $this->getAbsolutePath($contextPath);
-
-        return str_replace($contextPath . DIRECTORY_SEPARATOR, '', $absolute);
-    }
-
-    private function getSecurePath(string $contextPath, string $path): string
-    {
-        if ($contextPath === $path) {
-            return $path;
-        }
-
-        return $contextPath
-            . DIRECTORY_SEPARATOR
-            . ltrim($path, DIRECTORY_SEPARATOR);
     }
 
     /** @see https://en.wikipedia.org/wiki/List_of_URI_schemes */
@@ -171,7 +214,7 @@ class Path
         ]);
 
         $matches = [];
-        if (preg_match("/^({$blockedProtocols})/", $this->path, $matches) === 1) {
+        if (preg_match("/^({$blockedProtocols})/", $this->getPath(), $matches) === 1) {
             return false;
         }
 
@@ -180,7 +223,10 @@ class Path
 
     public function isRelativePath(): bool
     {
-        return preg_match('#(\.\.)|(\./)#', $this->path) === 1
-            || $this->path[0] !== '/';
+        $path = $this->getPath();
+
+        return preg_match('#(\.\.)|(\./)#', $path) === 1
+            || str_starts_with($path, DIRECTORY_SEPARATOR) === false
+            || str_ends_with($path, '.') ===  true;
     }
 }
