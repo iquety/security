@@ -19,24 +19,23 @@ class Filesystem
             throw new InvalidArgumentException('The context path must be absolute');
         }
 
-        $this->contextPath = trim($contextPath);
-        $this->contextPath = rtrim($contextPath, DIRECTORY_SEPARATOR);
+        $this->contextPath = $context->getContextPath();
     }
 
-    public function getContextPath(): string
+    public function getContextPath(): Path
     {
-        return $this->contextPath;
+        return new Path($this->contextPath);
     }
 
     /** @return array<int,Path> */
     public function getDirectoryContents(string $directoryPath): array
     {
-        $directory = new Path($directoryPath);
+        $directory = $this->getContextPath()->addNodePath($directoryPath);
 
         try {
-            $path = $directory->getAbsolutePath($this->getContextPath());
-        } catch (InvalidArgumentException) {
-            $dirname = $this->getContextPath() . DIRECTORY_SEPARATOR . $directoryPath;
+            $path = $directory->getAbsolutePath();
+        } catch (RuntimeException) {
+            $dirname = $directory->getPath();
             throw new RuntimeException("Directory {$dirname} does not exist");
         }
 
@@ -81,12 +80,12 @@ class Filesystem
 
     public function getFileContents(string $filePath): string
     {
-        $file = new Path($filePath);
+        $file = $this->getContextPath()->addNodePath($filePath);
 
         try {
-            $path = $file->getAbsolutePath($this->getContextPath());
-        } catch (InvalidArgumentException) {
-            $filename = $this->getContextPath() . DIRECTORY_SEPARATOR . $filePath;
+            $path = $file->getAbsolutePath();
+        } catch (RuntimeException) {
+            $filename = $file->getPath();
             throw new RuntimeException("File {$filename} does not exist");
         }
 
@@ -106,11 +105,12 @@ class Filesystem
     /** @return array<int,string> */
     public function getFileRows(string $filePath): array
     {
-        $file = new Path($filePath);
+        $file = $this->getContextPath()->addNodePath($filePath);
+
         try {
-            $path = $file->getAbsolutePath($this->getContextPath());
-        } catch (InvalidArgumentException) {
-            $filename = $this->getContextPath() . DIRECTORY_SEPARATOR . $filePath;
+            $path = $file->getAbsolutePath();
+        } catch (RuntimeException) {
+            $filename = $file->getPath();
             throw new RuntimeException("File {$filename} does not exist");
         }
 
@@ -119,8 +119,9 @@ class Filesystem
 
     public function getFilePermissions(string $filePath): string
     {
-        $file = new Path($filePath);
-        $path = $file->getAbsolutePath($this->getContextPath());
+        $file = $this->getContextPath()->addNodePath($filePath);
+
+        $path = $file->getAbsolutePath();
 
         $permissions = fileperms($path);
         return substr(sprintf('%o', $permissions), -4);
@@ -128,11 +129,15 @@ class Filesystem
 
     public function isDirectory(string $directoryPath): bool
     {
-        $directory = new Path($directoryPath);
+        if ((new Path($directoryPath))->isLocalPath() === false) {
+            return false;
+        }
+
+        $directory = $this->getContextPath()->addNodePath($directoryPath);
 
         try {
-            $path = $directory->getAbsolutePath($this->getContextPath());
-        } catch (InvalidArgumentException) {
+            $path = $directory->getAbsolutePath();
+        } catch (RuntimeException) {
             return false;
         }
 
@@ -141,11 +146,11 @@ class Filesystem
 
     public function isFile(string $filePath): bool
     {
-        $file = new Path($filePath);
+        $file = $this->getContextPath()->addNodePath($filePath);
 
         try {
-            $path = $file->getAbsolutePath($this->getContextPath());
-        } catch (InvalidArgumentException) {
+            $path = $file->getAbsolutePath();
+        } catch (RuntimeException) {
             return false;
         }
 
@@ -154,11 +159,11 @@ class Filesystem
 
     public function isReadable(string $targetPath): bool
     {
-        $target = new Path($targetPath);
+        $target = $this->getContextPath()->addNodePath($targetPath);
 
         try {
-            $path = $target->getAbsolutePath($this->getContextPath());
-        } catch (InvalidArgumentException) {
+            $path = $target->getAbsolutePath();
+        } catch (RuntimeException) {
             return false;
         }
 
@@ -167,11 +172,11 @@ class Filesystem
 
     public function isWritable(string $targetPath): bool
     {
-        $target = new Path($targetPath);
+        $target = $this->getContextPath()->addNodePath($targetPath);
 
         try {
-            $path = $target->getAbsolutePath($this->getContextPath());
-        } catch (InvalidArgumentException) {
+            $path = $target->getAbsolutePath();
+        } catch (RuntimeException) {
             return false;
         }
 
@@ -199,9 +204,9 @@ class Filesystem
      */
     public function changePermissions(string $targetPath, int $octalPermissions = 0755): void
     {
-        $target = new Path($targetPath);
+        $target = $this->getContextPath()->addNodePath($targetPath);
 
-        $path = $target->getAbsolutePath($this->getContextPath());
+        $path = $target->getAbsolutePath();
 
         if (chmod($path, $octalPermissions) === false) {
             // @codeCoverageIgnoreStart
@@ -216,13 +221,11 @@ class Filesystem
 
     public function makeDirectory(string $directoryPath): void
     {
-        $path = new Path($directoryPath);
-
         if ($this->isDirectory($directoryPath) === true) {
             return;
         }
 
-        if ($path->isLocalPath() === false) {
+        if ((new Path($directoryPath))->isLocalPath() === false) {
             throw new InvalidArgumentException(
                 'The path specified for the directory to be created is invalid'
             );
@@ -234,7 +237,7 @@ class Filesystem
             );
         }
 
-        $fullpath = $this->getContextPath() . DIRECTORY_SEPARATOR . $directoryPath;
+        $fullpath = $this->getContextPath()->addNodePath($directoryPath)->getPath();
 
         if (mkdir($fullpath, 0777, true) === false) {
             // @codeCoverageIgnoreStart
@@ -264,18 +267,15 @@ class Filesystem
             throw new InvalidArgumentException('The file path path must be absolute');
         }
 
-        $securePath = $this->getContextPath()
-            . DIRECTORY_SEPARATOR
-            . ltrim($filePath, DIRECTORY_SEPARATOR);
+        $file = $this->getContextPath()->addNodePath($filePath);
 
-        $directory = (new Path($filePath))->getDirectory();
-        $directory = str_replace($this->getContextPath(), '', $directory);
-
-        if ($this->isDirectory($directory) === false) {
-            $this->makeDirectory($directory);
+        // cria o diretório, se não existir
+        $nodePath = new Path($file->getNodePath());
+        if ($this->isDirectory($nodePath->getDirectory()) === false) {
+            $this->makeDirectory($nodePath->getDirectory());
         }
 
-        if (file_put_contents($securePath, $contents, $flag) === false) {
+        if (file_put_contents($file->getPath(), $contents, $flag) === false) {
             // @codeCoverageIgnoreStart
             throw new RuntimeException('Could not add data to file');
             // @codeCoverageIgnoreEnd

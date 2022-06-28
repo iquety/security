@@ -97,6 +97,9 @@ class FilesystemDirectoriesTest extends TestCase
 
         $instance = new Filesystem(__DIR__ . '/structure/level-one');
         $this->assertFalse($instance->isDirectory('level-deep'));
+
+        $instance = new Filesystem(__DIR__ . '/structure/level-one');
+        $this->assertFalse($instance->isDirectory('http://www.google'));
     }
 
     /** @test */
