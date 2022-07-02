@@ -14,7 +14,7 @@ class PathParseTest extends TestCase
     {
         $list = [];
 
-        $list[] = [
+        $list['file relative with two levels and extension'] = [
             '../level-two/level-one/filename.txt', // context
             '../level-two/level-one/filename.txt', // path
             '../level-two/level-one', // dir
@@ -23,7 +23,16 @@ class PathParseTest extends TestCase
             'txt', // ext
         ];
 
-        $list[] = [
+        $list['file absolute with two levels and extension'] = [
+            'level-two/level-one/filename.txt', // context
+            'level-two/level-one/filename.txt', // path
+            'level-two/level-one', // dir
+            'filename.txt', // file
+            'filename', // name
+            'txt', // ext
+        ];
+
+        $list['file relative with two levels without extension'] = [
             '../level-two/level-one/filename', // context
             '../level-two/level-one/filename', // path
             '../level-two/level-one', // dir
@@ -32,7 +41,16 @@ class PathParseTest extends TestCase
             '', // ext
         ];
 
-        $list[] = [
+        $list['file absolute with two levels without extension'] = [
+            'level-two/level-one/filename', // context
+            'level-two/level-one/filename', // path
+            'level-two/level-one', // dir
+            'filename', // file
+            'filename', // name
+            '', // ext
+        ];
+
+        $list['directory relative with two levels'] = [
             '../level-two/level-one/dirname/', // context
             '../level-two/level-one/dirname', // path
             '../level-two/level-one', // dir
@@ -41,7 +59,16 @@ class PathParseTest extends TestCase
             '', // ext
         ];
 
-        $list[] = [
+        $list['directory absolute with two levels'] = [
+            'level-two/level-one/dirname/', // context
+            'level-two/level-one/dirname', // path
+            'level-two/level-one', // dir
+            'dirname', // file
+            'dirname', // name
+            '', // ext
+        ];
+
+        $list['directory relative with single level'] = [
             '../level-two', // context
             '../level-two', // path
             '..', // dir
@@ -50,25 +77,34 @@ class PathParseTest extends TestCase
             '', // ext
         ];
 
-        $list[] = [
-            '../', // context
-            '..', // path
-            '', // dir
-            '', // file
-            '..', // name
+        $list['directory absolute with single level'] = [
+            'level-two', // context
+            'level-two', // path
+            '.', // dir
+            'level-two', // file
+            'level-two', // name
             '', // ext
         ];
 
-        $list[] = [
-            '.', // context
-            '.', // path
-            '', // dir
-            '', // file
+        $list['empty directory relative'] = [
+            '../', // context
+            '..', // path
+            '.', // dir
+            '..', // file
             '.', // name
             '', // ext
         ];
 
-        $list[] = [
+        $list['empty file relative'] = [
+            '.', // context
+            '.', // path
+            '.', // dir
+            '.', // file
+            '', // name
+            '', // ext
+        ];
+
+        $list['empty'] = [
             '', // context
             '', // path
             '', // dir

@@ -40,18 +40,6 @@ class Path
 
         $pathInfo = (array)pathinfo($path);
 
-        if ($pathInfo['dirname'] === '.') {
-            $this->info = [
-                'path'      => $path,
-                'directory' => '',
-                'file'      => '',
-                'name'      => $path,
-                'extension' => ''
-            ];
-
-            return;
-        }
-
         $this->info = [
             'path'      => $path,
             'directory' => $pathInfo['dirname'],
