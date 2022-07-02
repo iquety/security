@@ -9,7 +9,10 @@ use PHPUnit\Framework\TestCase;
 
 class PathParseTest extends TestCase
 {
-    /** @return array<mixed> */
+    /**
+     * @return array<mixed>
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     */
     public function pathProvider(): array
     {
         $list = [];
