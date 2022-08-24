@@ -5,6 +5,9 @@
 [![Codacy Badge](https://app.codacy.com/project/badge/Coverage/54e7b0e49f964976913d40f690249f45)](https://www.codacy.com/gh/ricardopedias/freep-security/dashboard?utm_source=github.com&utm_medium=referral&utm_content=ricardopedias/freep-security&utm_campaign=Badge_Coverage)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/54e7b0e49f964976913d40f690249f45)](https://www.codacy.com/gh/ricardopedias/freep-security/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ricardopedias/freep-security&amp;utm_campaign=Badge_Grade)
 
+[English](readme.md) | [Português](./docs/pt-br/leiame.md)
+-- | --
+
 ## Synopsis
 
 This repository contains a library with safe manipulations for various purposes.
@@ -13,7 +16,7 @@ The creation of these functionalities aims to inhibit the implementation of unsa
 
 Contains tools for handling and manipulating directories, files, paths, etc.
 
-For detailed information, consult the documentation in [English](docs/en/index.md) or [Portuguese](docs/pt-br/indice.md). See also this readme in [Portuguese](docs/pt-br/leiame.md).
+For detailed information, see [Documentation Summary](docs/en/index.md).
 
 ## Characteristics
 
@@ -24,10 +27,6 @@ For detailed information, consult the documentation in [English](docs/en/index.m
 - Implemented with unit tests using PHPUnit;
 - Made with :heart: &amp; :coffee:.
 
-### Contents
-
-- [Filesystem](docs/en/01-filesystem.md)
-- [Path](docs/en/02-path.md)
 ## Creditos
 
 [Ricardo Pereira Dias](https://www.ricardopedias.com.br)

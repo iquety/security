@@ -1,7 +1,6 @@
 # Documentation Summary
 
-[◂ Back to readme](../../readme.md) | [Filesystem ▸](01-filesystem.md)
--- | --
+--summary-nav--
 
 ## Introdução
 
@@ -9,5 +8,4 @@ Bem vindo(a) à documentação da biblioteca Freep Security. Aqui você encontra
 
 ### Conteúdo
 
-- [Filesystem](01-filesystem.md)
-- [Path](02-path.md)
+--summary--

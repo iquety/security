@@ -8,7 +8,7 @@ use Freep\Security\Path;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
-class PathaddNodePathTest extends TestCase
+class PathAddNodePathTest extends TestCase
 {
     /** @return array<mixed> */
     public function nodeProvider(): array

@@ -1,7 +1,6 @@
 # Path
 
-[◂ Filesystem](01-filesystem.md) | [Documentation Summary ▸](index.md)
--- | --
+--page-nav--
 
 ## Functionalities
 
@@ -25,5 +24,4 @@ The available methods are:
 - isLocalPath
 - isRelativePath
 
-[◂ Filesystem](01-filesystem.md) | [Documentation Summary ▸](index.md)
--- | --
+--page-nav--

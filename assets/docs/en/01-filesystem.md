@@ -1,7 +1,6 @@
 # Filesystem
 
-[◂ Documentation Summary](index.md) | [Path ▸](02-path.md)
--- | --
+--page-nav--
 
 ## Goal
 
@@ -33,5 +32,4 @@ The available methods are:
 - setFileContents
 - appendFileContents
 
-[◂ Documentation Summary](index.md) | [Path ▸](02-path.md)
--- | --
+--page-nav--

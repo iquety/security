@@ -1,6 +1,6 @@
-# Freep Security: Documentação
+# Sumário da Documentação
 
-[◂ Voltar ao Leiame](leiame.md) | [Filesystem ▸](01-filesystem.md)
+[◂ Voltar para o leiame](leiame.md) | [Filesystem ▸](01-filesystem.md)
 -- | --
 
 ## Introdução
