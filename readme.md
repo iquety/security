@@ -16,6 +16,10 @@ The creation of these functionalities aims to inhibit the implementation of unsa
 
 Contains tools for handling and manipulating directories, files, paths, etc.
 
+```bash
+composer require ricardopedias/freep-security
+```
+
 For detailed information, see [Documentation Summary](docs/en/index.md).
 
 ## Characteristics
