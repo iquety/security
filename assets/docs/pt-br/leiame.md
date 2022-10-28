@@ -1,4 +1,4 @@
-# Freep Security
+# Iquety Security
 
 [English](../../readme.md) | [Português](leiame.md)
 -- | --
@@ -12,7 +12,7 @@ A criação dessas funcionalidades objetivam inibir a implementação de rotinas
 Contém ferramentas para tratamento e manipulação de diretórios, arquivos, caminhos etc.
 
 ```bash
-composer require ricardopedias/freep-security
+composer require iquety/security
 ```
 
 Para informações detalhadas, consulte o [Sumário da Documentação](indice.md).

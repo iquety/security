@@ -1,5 +1,5 @@
 {
-    "name": "ricardopedias/freep-security",
+    "name": "iquety/security",
     "type": "library",
     "description": "Secure implementations for critical native functions",
     "keywords": ["framework", "freep", "security"],
@@ -12,12 +12,12 @@
         "phpunit/phpunit": "^9",
         "phpstan/phpstan": "^0.12",
         "phpmd/phpmd": "@stable",
-        "ricardopedias/freep-docmap": "dev-main",
+        "iquety/docmap": "dev-main",
         "squizlabs/php_codesniffer": "3.*"
     },
     "autoload": {
         "psr-4": {
-            "Freep\\Security\\": "src/"
+            "Iquety\\Security\\": "src/"
         }
     },
     "autoload-dev": {

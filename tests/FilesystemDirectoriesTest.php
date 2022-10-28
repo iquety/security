@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests;
 
-use Freep\Security\Filesystem;
-use Freep\Security\Path;
+use Iquety\Security\Filesystem;
+use Iquety\Security\Path;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;

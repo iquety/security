@@ -1,4 +1,4 @@
-# Freep Security
+# Iquety Security
 
 ![PHP Version](https://img.shields.io/badge/php-%5E8.0-blue)
 ![License](https://img.shields.io/badge/license-MIT-blue)
@@ -17,7 +17,7 @@ The creation of these functionalities aims to inhibit the implementation of unsa
 Contains tools for handling and manipulating directories, files, paths, etc.
 
 ```bash
-composer require ricardopedias/freep-security
+composer require iquety/security
 ```
 
 For detailed information, see [Documentation Summary](docs/en/index.md).

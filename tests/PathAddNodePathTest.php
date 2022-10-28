@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests;
 
-use Freep\Security\Path;
+use Iquety\Security\Path;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
