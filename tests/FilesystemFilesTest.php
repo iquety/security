@@ -16,7 +16,7 @@ class FilesystemFilesTest extends TestCase
     {
         $instance = new Filesystem(__DIR__ . '/structure');
         $this->assertEquals([
-            '000', '111', '222', '333', '444', '555', '666', '777', '888', '999'
+            '000   ', '   111', '222', '333', '444', '555', '666', '777', '888', '999'
         ], $instance->getFileRows('file-zero.txt'));
     }
 
@@ -36,7 +36,7 @@ class FilesystemFilesTest extends TestCase
         $instance = new Filesystem(__DIR__ . '/structure');
 
         $this->assertEquals(
-            "000\n111\n222\n333\n444\n555\n666\n777\n888\n999",
+            "000   \n   111\n222\n333\n444\n555\n666\n777\n888\n999",
             $instance->getFileContents('file-zero.txt')
         );
     }

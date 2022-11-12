@@ -122,7 +122,7 @@ class Filesystem
             throw new RuntimeException("File {$filename} does not exist");
         }
 
-        return array_map(fn($row) => trim($row), file($path) ?: []);
+        return array_map(fn($row) => rtrim($row, "\n\r"), file($path) ?: []);
     }
 
     public function getFilePermissions(string $filePath): string
