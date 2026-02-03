@@ -22,6 +22,18 @@ class FilesystemPermissionsTest extends TestCase
         $this->assertEquals('0644', $instance->getFilePermissions('file-zero.txt'));
     }
 
+    /** @test */
+    public function changePermissionsFullPath(): void
+    {
+        $instance = new Filesystem(__DIR__ . '/structure');
+
+        $instance->changePermissions(__DIR__ . '/structure/file-zero.txt', 0444);
+        $this->assertEquals('0444', $instance->getFilePermissions('file-zero.txt'));
+
+        $instance->changePermissions(__DIR__ . '/structure/file-zero.txt', 0644);
+        $this->assertEquals('0644', $instance->getFilePermissions('file-zero.txt'));
+    }
+
     // /** @test */
     // public function changePermissionsException(): void
     // {
@@ -37,6 +49,13 @@ class FilesystemPermissionsTest extends TestCase
     }
 
     /** @test */
+    public function isReadableObjectFullPath(): void
+    {
+        $instance = new Filesystem(__DIR__ . '/structure');
+        $this->assertTrue($instance->isReadable(__DIR__ . '/structure/file-zero.txt'));
+    }
+
+    /** @test */
     public function isReadableObjectException(): void
     {
         $instance = new Filesystem(__DIR__ . '/structure');
@@ -49,6 +68,14 @@ class FilesystemPermissionsTest extends TestCase
         $instance = new Filesystem(__DIR__ . '/structure');
         $instance->changePermissions('file-zero.txt', 0777);
         $this->assertTrue($instance->isWritable('file-zero.txt'));
+    }
+
+    /** @test */
+    public function isWritableObjectFullPath(): void
+    {
+        $instance = new Filesystem(__DIR__ . '/structure');
+        $instance->changePermissions('file-zero.txt', 0777);
+        $this->assertTrue($instance->isWritable(__DIR__ . '/structure/file-zero.txt'));
     }
 
     /** @test */

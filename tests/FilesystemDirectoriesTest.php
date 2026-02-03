@@ -30,6 +30,17 @@ class FilesystemDirectoriesTest extends TestCase
     }
 
     /** @test */
+    public function getDirectoryContentsFullPath(): void
+    {
+        $instance = new Filesystem(__DIR__ . '/structure');
+
+        $this->assertEquals([
+            (new Path(__DIR__ . '/structure'))->addNodePath('level-one/file-one.txt'),
+            (new Path(__DIR__ . '/structure'))->addNodePath('/level-one/level-two')
+        ], $instance->getDirectoryContents(__DIR__ . '/structure/level-one'));
+    }
+
+    /** @test */
     public function getDirectoryEmptyContents(): void
     {
         $this->makeDir(__DIR__ . '/structure/empty');
@@ -49,6 +60,16 @@ class FilesystemDirectoriesTest extends TestCase
     }
 
     /** @test */
+    public function getDirectoryFilesFullPath(): void
+    {
+        $instance = new Filesystem(__DIR__ . '/structure');
+
+        $this->assertEquals([
+            (new Path(__DIR__ . '/structure'))->addNodePath('level-one/file-one.txt'),
+        ], $instance->getDirectoryFiles(__DIR__ . '/structure/level-one'));
+    }
+
+    /** @test */
     public function getDirectoryEmptyFiles(): void
     {
         $this->makeDir(__DIR__ . '/structure/empty');
@@ -65,6 +86,16 @@ class FilesystemDirectoriesTest extends TestCase
         $this->assertEquals([
             (new Path(__DIR__ . '/structure'))->addNodePath('level-one/level-two')
         ], $instance->getDirectorySubdirs('level-one'));
+    }
+
+    /** @test */
+    public function getDirectorySubdirsFullPath(): void
+    {
+        $instance = new Filesystem(__DIR__ . '/structure');
+
+        $this->assertEquals([
+            (new Path(__DIR__ . '/structure'))->addNodePath('level-one/level-two')
+        ], $instance->getDirectorySubdirs(__DIR__ . '/structure/level-one'));
     }
 
     /** @test */
@@ -103,19 +134,42 @@ class FilesystemDirectoriesTest extends TestCase
     }
 
     /** @test */
+    public function isDirectoryFullPath(): void
+    {
+        $instance = new Filesystem(__DIR__ . '/structure');
+        $this->assertTrue($instance->isDirectory(__DIR__ . '/structure/level-one'));
+
+        $instance = new Filesystem(__DIR__ . '/structure/level-one');
+        $this->assertTrue($instance->isDirectory(__DIR__ . '/structure/level-one/level-two'));
+    }
+
+    /** @test */
     public function makeDirectory(): void
     {
-        $contextPath = __DIR__ . '/structure';
-
-        $instance = new Filesystem($contextPath);
+        $instance = new Filesystem(__DIR__ . '/structure');
         $instance->makeDirectory('level-one/level-two/level-three');
 
-        $this->assertDirectoryExists("$contextPath/level-one/level-two/level-three");
+        $this->assertDirectoryExists(__DIR__ . "/structure/level-one/level-two/level-three");
 
         // isso não causará efeito. diretório não precisa ser criado
         $instance->makeDirectory('level-one/level-two/level-three');
 
-        rmdir("$contextPath/level-one/level-two/level-three");
+        rmdir(__DIR__ . "/structure/level-one/level-two/level-three");
+    }
+
+    /** @test */
+    public function makeDirectoryFullPath(): void
+    {
+        $instance = new Filesystem(__DIR__ . '/structure');
+        $instance->makeDirectory(__DIR__ . '/structure/level-one/level-two/level-three');
+
+        $this->assertDirectoryExists(__DIR__ . "/structure/level-one/level-two/level-three");
+
+        // isso não causará efeito. diretório não precisa ser criado
+        $instance->makeDirectory('level-one/level-two/level-three');
+        $instance->makeDirectory(__DIR__ . '/structure/level-one/level-two/level-three');
+
+        rmdir(__DIR__ . "/structure/level-one/level-two/level-three");
     }
 
     /** @test */

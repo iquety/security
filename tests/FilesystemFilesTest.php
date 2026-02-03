@@ -11,13 +11,29 @@ use RuntimeException;
 
 class FilesystemFilesTest extends TestCase
 {
-    /** @test */
-    public function getFileRows(): void
+    /** @return array<int,array<int,string>> */
+    public function fileContentsProvider(): array
     {
-        $instance = new Filesystem(__DIR__ . '/structure');
+        $list = [];
+
+        $list[] = [__DIR__, __DIR__ . '/structure/file-zero.txt'];
+        $list[] = [__DIR__ . '/structure', 'file-zero.txt'];
+        $list[] = [__DIR__ , '/structure/file-zero.txt'];
+        $list[] = [__DIR__ , 'structure/file-zero.txt'];
+
+        return $list;
+    }
+
+    /**
+     * @test
+     * @dataProvider fileContentsProvider
+     */
+    public function getFileRows(string $contextPath, string $filePath): void
+    {
+        $instance = new Filesystem($contextPath);
         $this->assertEquals([
             '000   ', '   111', '222', '333', '444', '555', '666', '777', '888', '999'
-        ], $instance->getFileRows('file-zero.txt'));
+        ], $instance->getFileRows($filePath));
     }
 
     /** @test */
@@ -30,14 +46,17 @@ class FilesystemFilesTest extends TestCase
         $instance->getFileRows('not-exists.txt');
     }
 
-    /** @test */
-    public function getFileContents(): void
+    /**
+     * @test
+     * @dataProvider fileContentsProvider
+     */
+    public function getFileContents(string $contextPath, string $filePath): void
     {
-        $instance = new Filesystem(__DIR__ . '/structure');
+        $instance = new Filesystem($contextPath);
 
         $this->assertEquals(
             "000   \n   111\n222\n333\n444\n555\n666\n777\n888\n999",
-            $instance->getFileContents('file-zero.txt')
+            $instance->getFileContents($filePath)
         );
     }
 
@@ -51,37 +70,101 @@ class FilesystemFilesTest extends TestCase
         $instance->getFileContents('not-exists.txt');
     }
 
-    /** @test */
-    public function isFile(): void
+    /** @return array<int,array<int,string>> */
+    public function isFileProvider(): array
     {
-        $instance = new Filesystem(__DIR__ . '/structure');
-        $this->assertTrue($instance->isFile('level-one/file-one.txt'));
+        $list = [];
 
-        $instance = new Filesystem(__DIR__ . '/structure/level-one');
-        $this->assertTrue($instance->isFile('file-one.txt'));
+        $list[] = [__DIR__, __DIR__ . '/structure/level-one/file-one.txt'];
+        $list[] = [__DIR__ . '/', __DIR__ . '/structure/level-one/file-one.txt'];
 
-        $instance = new Filesystem(__DIR__ . '/structure/level-one');
-        $this->assertTrue($instance->isFile('level-two/file-two.txt'));
+        $list[] = [__DIR__, 'structure/level-one/file-one.txt'];
+        $list[] = [__DIR__, '/structure/level-one/file-one.txt'];
+        $list[] = [__DIR__ . '/', 'structure/level-one/file-one.txt'];
+        $list[] = [__DIR__ . '/', '/structure/level-one/file-one.txt'];
 
+        $list[] = [__DIR__ . '/structure', 'level-one/file-one.txt'];
+        $list[] = [__DIR__ . '/structure', '/level-one/file-one.txt'];
+        $list[] = [__DIR__ . '/structure/', 'level-one/file-one.txt'];
+        $list[] = [__DIR__ . '/structure/', '/level-one/file-one.txt'];
+
+        $list[] = [__DIR__ . '/structure/level-one', 'file-one.txt'];
+        $list[] = [__DIR__ . '/structure/level-one', '/file-one.txt'];
+        $list[] = [__DIR__ . '/structure/level-one/', 'file-one.txt'];
+        $list[] = [__DIR__ . '/structure/level-one/', '/file-one.txt'];
+
+        $list[] = [__DIR__ . '/structure/level-one/level-two', 'file-two.txt'];
+        $list[] = [__DIR__ . '/structure/level-one/level-two', '/file-two.txt'];
+        $list[] = [__DIR__ . '/structure/level-one/level-two/', 'file-two.txt'];
+        $list[] = [__DIR__ . '/structure/level-one/level-two/', '/file-two.txt'];
+
+        return $list;
+    }
+
+    /**
+     * @test
+     * @dataProvider isFileProvider
+     */
+    public function isFile(string $contextPath, string $filePath): void
+    {
+        $instance = new Filesystem($contextPath);
+        $this->assertTrue($instance->isFile($filePath));
+    }
+
+    /** @test */
+    public function isNotFile(): void
+    {
         $instance = new Filesystem(__DIR__ . '/structure/level-one');
         $this->assertFalse($instance->isFile('file-nop.txt'));
     }
 
-    /** @test */
-    public function setFileContents(): void
+    /** @return array<int,array<int,string>> */
+    public function setFileContentsProvider(): array
     {
-        $contextPath = __DIR__ . '/structure';
+        $list = [];
 
+        $list[] = [__DIR__, __DIR__ . '/structure/runtime/set-file-contents.txt'];
+        $list[] = [__DIR__ . '/', __DIR__ . '/structure/runtime/set-file-contents.txt'];
+
+        $list[] = [__DIR__, '/structure/runtime/set-file-contents.txt'];
+        $list[] = [__DIR__, 'structure/runtime/set-file-contents.txt'];
+        $list[] = [__DIR__ . '/', '/structure/runtime/set-file-contents.txt'];
+        $list[] = [__DIR__ . '/', 'structure/runtime/set-file-contents.txt'];
+
+        $list[] = [__DIR__ . '/structure', 'runtime/set-file-contents.txt'];
+        $list[] = [__DIR__ . '/structure', '/runtime/set-file-contents.txt'];
+        $list[] = [__DIR__ . '/structure/', 'runtime/set-file-contents.txt'];
+        $list[] = [__DIR__ . '/structure/', '/runtime/set-file-contents.txt'];
+
+        $list[] = [__DIR__ . '/structure/runtime', 'set-file-contents.txt'];
+        $list[] = [__DIR__ . '/structure/runtime', '/set-file-contents.txt'];
+        $list[] = [__DIR__ . '/structure/runtime/', 'set-file-contents.txt'];
+        $list[] = [__DIR__ . '/structure/runtime/', '/set-file-contents.txt'];
+
+        $list[] = [__DIR__ . '/structure', __DIR__ . '/structure/runtime/set-file-contents.txt'];
+        $list[] = [__DIR__ . '/structure/', __DIR__ . '/structure/runtime/set-file-contents.txt'];
+
+        $list[] = [__DIR__ . '/structure/runtime', __DIR__ . '/structure/runtime/set-file-contents.txt'];
+        $list[] = [__DIR__ . '/structure/runtime/', __DIR__ . '/structure/runtime/set-file-contents.txt'];
+
+        return $list;
+    }
+
+    /**
+     * @test
+     * @dataProvider setFileContentsProvider
+     */
+    public function setFileContents(string $contextPath, string $filePath): void
+    {
         $instance = new Filesystem($contextPath);
 
-        $instance->setFileContents('runtime/set-file-contents.txt', 'contents');
-        $this->assertEquals('contents', $instance->getFileContents('runtime/set-file-contents.txt'));
+        $instance->setFileContents($filePath, 'contents');
+        $this->assertEquals('contents', $instance->getFileContents($filePath));
 
-        $instance->setFileContents('runtime/set-file-contents.txt', 'naitis');
-        $this->assertEquals('naitis', $instance->getFileContents('runtime/set-file-contents.txt'));
+        $instance->setFileContents($filePath, 'naitis');
+        $this->assertEquals('naitis', $instance->getFileContents($filePath));
 
-        unlink("$contextPath/runtime/set-file-contents.txt");
-        $this->assertTrue(rmdir("$contextPath/runtime"));
+        unlink(__DIR__ . "/structure/runtime/set-file-contents.txt");
     }
 
     /** @test */
@@ -94,12 +177,12 @@ class FilesystemFilesTest extends TestCase
         $instance->setFileContents('runtime/../../set-file-contents.txt', 'naitis');
     }
 
-    /** @test */
-    public function appendFileContents(): void
+    /**
+     * @test
+     * @dataProvider setFileContentsProvider
+     */
+    public function appendFileContents(string $contextPath, string $filePath): void
     {
-        $contextPath = __DIR__ . '/structure';
-        $filePath = 'runtime/append-file-contents.txt';
-
         $instance = new Filesystem($contextPath);
 
         $instance->appendFileContents($filePath, 'contents');
@@ -108,8 +191,7 @@ class FilesystemFilesTest extends TestCase
         $instance->appendFileContents($filePath, 'naitis');
         $this->assertEquals('contentsnaitis', $instance->getFileContents($filePath));
 
-        unlink("$contextPath/$filePath");
-        $this->assertTrue(rmdir("$contextPath/runtime"));
+        unlink(__DIR__ . "/structure/runtime/set-file-contents.txt");
     }
 
     // /** @test */

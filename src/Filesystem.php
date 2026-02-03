@@ -30,6 +30,8 @@ class Filesystem
     /** @return array<int,Path> */
     public function getDirectoryContents(string $directoryPath): array
     {
+        $directoryPath = $this->preparePath($directoryPath);
+
         $directory = $this->getContextPath()->addNodePath($directoryPath);
 
         $nodePath = $directory->getNodePath();
@@ -88,6 +90,8 @@ class Filesystem
 
     public function getFileContents(string $filePath): string
     {
+        $filePath = $this->preparePath($filePath);
+
         $file = $this->getContextPath()->addNodePath($filePath);
 
         try {
@@ -113,6 +117,8 @@ class Filesystem
     /** @return array<int,string> */
     public function getFileRows(string $filePath): array
     {
+        $filePath = $this->preparePath($filePath);
+
         $file = $this->getContextPath()->addNodePath($filePath);
 
         try {
@@ -127,6 +133,8 @@ class Filesystem
 
     public function getFilePermissions(string $filePath): string
     {
+        $filePath = $this->preparePath($filePath);
+
         $file = $this->getContextPath()->addNodePath($filePath);
 
         $path = $file->getAbsolutePath();
@@ -141,6 +149,8 @@ class Filesystem
             return false;
         }
 
+        $directoryPath = $this->preparePath($directoryPath);
+
         $directory = $this->getContextPath()->addNodePath($directoryPath);
 
         try {
@@ -154,6 +164,8 @@ class Filesystem
 
     public function isFile(string $filePath): bool
     {
+        $filePath = $this->preparePath($filePath);
+
         $file = $this->getContextPath()->addNodePath($filePath);
 
         try {
@@ -167,6 +179,8 @@ class Filesystem
 
     public function isReadable(string $targetPath): bool
     {
+        $targetPath = $this->preparePath($targetPath);
+
         $target = $this->getContextPath()->addNodePath($targetPath);
 
         try {
@@ -180,6 +194,8 @@ class Filesystem
 
     public function isWritable(string $targetPath): bool
     {
+        $targetPath = $this->preparePath($targetPath);
+
         $target = $this->getContextPath()->addNodePath($targetPath);
 
         try {
@@ -212,6 +228,8 @@ class Filesystem
      */
     public function changePermissions(string $targetPath, int $octalPermissions = 0755): void
     {
+        $targetPath = $this->preparePath($targetPath);
+
         $target = $this->getContextPath()->addNodePath($targetPath);
 
         $path = $target->getAbsolutePath();
@@ -229,6 +247,8 @@ class Filesystem
 
     public function makeDirectory(string $directoryPath): void
     {
+        $directoryPath = $this->preparePath($directoryPath);
+
         if ($this->isDirectory($directoryPath) === true) {
             return;
         }
@@ -266,6 +286,11 @@ class Filesystem
         $this->touchFile($filePath, $contents, FILE_APPEND);
     }
 
+    private function preparePath(string $filePath): string
+    {
+        return str_replace($this->contextPath, '', $filePath);
+    }
+
     /**
      * @see https://www.php.net/manual/pt_BR/function.file-put-contents.php
      */
@@ -274,6 +299,8 @@ class Filesystem
         if ((new Path(DIRECTORY_SEPARATOR . $filePath))->isRelativePath() == true) {
             throw new InvalidArgumentException('The file path path must be absolute');
         }
+
+        $filePath = $this->preparePath($filePath);
 
         $file = $this->getContextPath()->addNodePath($filePath);
 
