@@ -31,6 +31,15 @@ class PathGetDirectoryTest extends TestCase
         return $list;
     }
 
+    /** @test */
+    public function getDirectoryInvalidLevel(string $path, string $node, int $levels): void
+    {
+        $instance = new Path($path);
+        $instance->addNodePath($node);
+
+        $instance->getDirectory($levels);
+    }
+
     /**
      * @test
      * @dataProvider pathProvider

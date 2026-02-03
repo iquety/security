@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Iquety\Security;
 
+use InvalidArgumentException;
 use RuntimeException;
 
 class Path
@@ -42,7 +43,7 @@ class Path
 
         $this->info = [
             'path'      => $path,
-            'directory' => $pathInfo['dirname'],
+            'directory' => $pathInfo['dirname'] ?? '',
             'file'      => $pathInfo['basename'],
             'name'      => $pathInfo['filename'],
             'extension' => $pathInfo['extension'] ?? ''
@@ -121,6 +122,10 @@ class Path
 
     public function getDirectory(int $levels = 1): string
     {
+        if ($levels <= 0) {
+            throw new InvalidArgumentException('Directory levels must be greater than zero');
+        }
+
         if ($levels === 1) {
             return $this->info['directory'];
         }
