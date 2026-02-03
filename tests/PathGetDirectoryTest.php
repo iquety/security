@@ -4,12 +4,40 @@ declare(strict_types=1);
 
 namespace Tests;
 
+use InvalidArgumentException;
 use Iquety\Security\Path;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
 class PathGetDirectoryTest extends TestCase
 {
+    /** @return array<mixed> */
+    public function levelsProvider(): array
+    {
+        $list = [];
+
+        $list[] = [ 0 ];
+        $list[] = [ -1 ];
+        $list[] = [ -2 ];
+
+        return $list;
+    }
+
+    /**
+     * @test
+     * @dataProvider levelsProvider
+     */
+    public function getDirectoryInvalidLevel(int $levels): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Directory levels must be greater than zero');
+
+        $instance = new Path('../dir');
+        $instance->addNodePath('subdir/file');
+
+        $instance->getDirectory($levels);
+    }
+
     /** @return array<mixed> */
     public function pathProvider(): array
     {
@@ -29,15 +57,6 @@ class PathGetDirectoryTest extends TestCase
         $list[] = [ './dir', 'subdir/file', 2,  './dir' ];
 
         return $list;
-    }
-
-    /** @test */
-    public function getDirectoryInvalidLevel(string $path, string $node, int $levels): void
-    {
-        $instance = new Path($path);
-        $instance->addNodePath($node);
-
-        $instance->getDirectory($levels);
     }
 
     /**

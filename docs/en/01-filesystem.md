@@ -13,6 +13,35 @@ Of course, a properly configured server is capable of preventing this type of at
 
 When building a new `Filesystem` object, it is necessary to provide a **context**, that is, a valid directory that will serve as a limit for manipulating files and directories.
 
+Considere a seguinte estrutura:
+
+```txt
+/fulano/
+   |- directory/
+   |    |
+   |    |- real/
+   |         |
+   |         |- to/
+   |              |
+   |              |- my/
+   |                   |
+   |                   |- file.txt
+   |- file.txt
+```
+
+```php
+// defines a scope to navigate only within the directory __DIR__ . '/directory/real'
+$instance = new Filesystem(__DIR__ . '/diretoryo/real');
+
+// gets the contents of the file __DIR__ . '/directory/real/to/my/file.txt
+$content = $instance->getFileContents('to/my/file.txt'); 
+
+// even if a file exists outside the scope, it will not be possible to access it.
+$content = $instance->getFileContents('../../file.txt');
+// an exception will be thrown:
+// File /fulano/file.txt does not exist
+```
+
 In other words, only files and directories that are inside the context directory can be manipulated by the `Filesystem` instance.
 
 The available methods are:
