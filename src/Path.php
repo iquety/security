@@ -23,33 +23,6 @@ class Path
         $this->parsePathInfo($this->contextPath);
     }
 
-    private function parsePathInfo(string $path): void
-    {
-        if (in_array($path, ['', DIRECTORY_SEPARATOR]) === true) {
-            $this->info = [
-                'path'      => $path,
-                'directory' => '',
-                'file'      => '',
-                'name'      => '',
-                'extension' => ''
-            ];
-
-            return;
-        }
-
-        $path = rtrim($path, DIRECTORY_SEPARATOR);
-
-        $pathInfo = (array)pathinfo($path);
-
-        $this->info = [
-            'path'      => $path,
-            'directory' => $pathInfo['dirname'] ?? '',
-            'file'      => $pathInfo['basename'],
-            'name'      => $pathInfo['filename'],
-            'extension' => $pathInfo['extension'] ?? ''
-        ];
-    }
-
     public function addNodePath(string $subpath): self
     {
         if ($subpath === '') {
@@ -103,11 +76,11 @@ class Path
             return $realPath;
         }
 
-        $realContext = (string)realpath($this->getContextPath());
+        $realContext = (string) realpath($this->getContextPath());
 
         if (str_starts_with($realPath, $realContext) === false) {
             throw new RuntimeException(
-                "Cannot get absolute path outside "
+                'Cannot get absolute path outside '
                 . "the scope of the '{$realContext}' context"
             );
         }
@@ -142,7 +115,7 @@ class Path
 
         if (str_starts_with($dirname, $this->getContextPath()) === false) {
             throw new RuntimeException(
-                "Cannot get information from a directory outside "
+                'Cannot get information from a directory outside '
                 . "the scope of the '{$this->contextPath}' context"
             );
         }
@@ -223,5 +196,32 @@ class Path
         return preg_match('#(\.\.)|(\./)#', $path) === 1
             || str_starts_with($path, DIRECTORY_SEPARATOR) === false
             || str_ends_with($path, '.') ===  true;
+    }
+
+    private function parsePathInfo(string $path): void
+    {
+        if (in_array($path, ['', DIRECTORY_SEPARATOR]) === true) {
+            $this->info = [
+                'path'      => $path,
+                'directory' => '',
+                'file'      => '',
+                'name'      => '',
+                'extension' => ''
+            ];
+
+            return;
+        }
+
+        $path = rtrim($path, DIRECTORY_SEPARATOR);
+
+        $pathInfo = (array) pathinfo($path);
+
+        $this->info = [
+            'path'      => $path,
+            'directory' => $pathInfo['dirname'] ?? '',
+            'file'      => $pathInfo['basename'],
+            'name'      => $pathInfo['filename'],
+            'extension' => $pathInfo['extension'] ?? ''
+        ];
     }
 }

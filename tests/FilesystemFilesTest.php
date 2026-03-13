@@ -18,8 +18,8 @@ class FilesystemFilesTest extends TestCase
 
         $list[] = [__DIR__, __DIR__ . '/structure/file-zero.txt'];
         $list[] = [__DIR__ . '/structure', 'file-zero.txt'];
-        $list[] = [__DIR__ , '/structure/file-zero.txt'];
-        $list[] = [__DIR__ , 'structure/file-zero.txt'];
+        $list[] = [__DIR__, '/structure/file-zero.txt'];
+        $list[] = [__DIR__, 'structure/file-zero.txt'];
 
         return $list;
     }
@@ -164,7 +164,7 @@ class FilesystemFilesTest extends TestCase
         $instance->setFileContents($filePath, 'naitis');
         $this->assertEquals('naitis', $instance->getFileContents($filePath));
 
-        unlink(__DIR__ . "/structure/runtime/set-file-contents.txt");
+        unlink(__DIR__ . '/structure/runtime/set-file-contents.txt');
     }
 
     /** @test */
@@ -191,7 +191,7 @@ class FilesystemFilesTest extends TestCase
         $instance->appendFileContents($filePath, 'naitis');
         $this->assertEquals('contentsnaitis', $instance->getFileContents($filePath));
 
-        unlink(__DIR__ . "/structure/runtime/set-file-contents.txt");
+        unlink(__DIR__ . '/structure/runtime/set-file-contents.txt');
     }
 
     // /** @test */

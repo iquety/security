@@ -24,12 +24,12 @@ class PathGetAbsolutePathTest extends TestCase
         $list[] = [ './tests', 'structure', __DIR__ . '/structure' ];
 
         // caminhos com nucleo relativo
-        $list[] = [ __DIR__ . '/./structure' ,        '',  __DIR__ . '/structure' ];
-        $list[] = [ __DIR__ . '/../tests/structure' , '',  __DIR__ . '/structure' ];
+        $list[] = [ __DIR__ . '/./structure',        '',  __DIR__ . '/structure' ];
+        $list[] = [ __DIR__ . '/../tests/structure', '',  __DIR__ . '/structure' ];
 
         // caminhos com nó relativo
-        $list[] = [ __DIR__ , '/./structure',        __DIR__ . '/structure' ];
-        $list[] = [ __DIR__ , '/../tests/structure', __DIR__ . '/structure' ];
+        $list[] = [ __DIR__, '/./structure',        __DIR__ . '/structure' ];
+        $list[] = [ __DIR__, '/../tests/structure', __DIR__ . '/structure' ];
 
         // caminho absolutos
         $list[] = [ __DIR__ . '/structure', '', __DIR__ . '/structure' ];
@@ -62,8 +62,8 @@ class PathGetAbsolutePathTest extends TestCase
         $list[] = [ '../structure', '', __DIR__ . '/structure' ];
 
         // caminhos com nó relativo invalido
-        $list[] = [ __DIR__ , '/./struct',        __DIR__ . '/structure' ];
-        $list[] = [ __DIR__ , '/tests/../struct', __DIR__ . '/structure' ];
+        $list[] = [ __DIR__, '/./struct',        __DIR__ . '/structure' ];
+        $list[] = [ __DIR__, '/tests/../struct', __DIR__ . '/structure' ];
 
         return $list;
     }
@@ -90,7 +90,7 @@ class PathGetAbsolutePathTest extends TestCase
 
         // caminhos que se resolvem acima do contexto
         // devem ser bloqueados com uma exceção
-        $list[] = [ __DIR__ ,  '../' ];
+        $list[] = [ __DIR__,  '../' ];
         $list[] = [ __DIR__ . '/structure',  '../' ];
         $list[] = [ __DIR__ . '/structure',  'level-one/../../' ];
 

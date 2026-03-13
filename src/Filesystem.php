@@ -226,7 +226,7 @@ class Filesystem
      *
      * @see https://www.php.net/manual/en/function.chmod.php
      */
-    public function changePermissions(string $targetPath, int $octalPermissions = 0755): void
+    public function changePermissions(string $targetPath, int $octalPermissions = 0o755): void
     {
         $targetPath = $this->preparePath($targetPath);
 
@@ -267,7 +267,7 @@ class Filesystem
 
         $fullpath = $this->getContextPath()->addNodePath($directoryPath)->getPath();
 
-        if (mkdir($fullpath, 0777, true) === false) {
+        if (mkdir($fullpath, 0o777, true) === false) {
             // @codeCoverageIgnoreStart
             throw new RuntimeException(
                 'The relevant permissions prevent creating the directory'

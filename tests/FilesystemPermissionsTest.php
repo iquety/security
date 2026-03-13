@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests;
 
 use Iquety\Security\Filesystem;
-use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 class FilesystemPermissionsTest extends TestCase
@@ -15,10 +14,10 @@ class FilesystemPermissionsTest extends TestCase
     {
         $instance = new Filesystem(__DIR__ . '/structure');
 
-        $instance->changePermissions('file-zero.txt', 0444);
+        $instance->changePermissions('file-zero.txt', 0o444);
         $this->assertEquals('0444', $instance->getFilePermissions('file-zero.txt'));
 
-        $instance->changePermissions('file-zero.txt', 0644);
+        $instance->changePermissions('file-zero.txt', 0o644);
         $this->assertEquals('0644', $instance->getFilePermissions('file-zero.txt'));
     }
 
@@ -27,10 +26,10 @@ class FilesystemPermissionsTest extends TestCase
     {
         $instance = new Filesystem(__DIR__ . '/structure');
 
-        $instance->changePermissions(__DIR__ . '/structure/file-zero.txt', 0444);
+        $instance->changePermissions(__DIR__ . '/structure/file-zero.txt', 0o444);
         $this->assertEquals('0444', $instance->getFilePermissions('file-zero.txt'));
 
-        $instance->changePermissions(__DIR__ . '/structure/file-zero.txt', 0644);
+        $instance->changePermissions(__DIR__ . '/structure/file-zero.txt', 0o644);
         $this->assertEquals('0644', $instance->getFilePermissions('file-zero.txt'));
     }
 
@@ -66,7 +65,7 @@ class FilesystemPermissionsTest extends TestCase
     public function isWritableObject(): void
     {
         $instance = new Filesystem(__DIR__ . '/structure');
-        $instance->changePermissions('file-zero.txt', 0777);
+        $instance->changePermissions('file-zero.txt', 0o777);
         $this->assertTrue($instance->isWritable('file-zero.txt'));
     }
 
@@ -74,7 +73,7 @@ class FilesystemPermissionsTest extends TestCase
     public function isWritableObjectFullPath(): void
     {
         $instance = new Filesystem(__DIR__ . '/structure');
-        $instance->changePermissions('file-zero.txt', 0777);
+        $instance->changePermissions('file-zero.txt', 0o777);
         $this->assertTrue($instance->isWritable(__DIR__ . '/structure/file-zero.txt'));
     }
 

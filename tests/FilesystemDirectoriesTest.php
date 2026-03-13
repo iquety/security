@@ -12,13 +12,6 @@ use RuntimeException;
 
 class FilesystemDirectoriesTest extends TestCase
 {
-    private function makeDir(string $path): void
-    {
-        if (is_dir($path) === false) {
-            mkdir($path, 0777, true);
-        }
-    }
-
     /** @test */
     public function getDirectoryContents(): void
     {
@@ -149,12 +142,12 @@ class FilesystemDirectoriesTest extends TestCase
         $instance = new Filesystem(__DIR__ . '/structure');
         $instance->makeDirectory('level-one/level-two/level-three');
 
-        $this->assertDirectoryExists(__DIR__ . "/structure/level-one/level-two/level-three");
+        $this->assertDirectoryExists(__DIR__ . '/structure/level-one/level-two/level-three');
 
         // isso não causará efeito. diretório não precisa ser criado
         $instance->makeDirectory('level-one/level-two/level-three');
 
-        rmdir(__DIR__ . "/structure/level-one/level-two/level-three");
+        rmdir(__DIR__ . '/structure/level-one/level-two/level-three');
     }
 
     /** @test */
@@ -163,13 +156,13 @@ class FilesystemDirectoriesTest extends TestCase
         $instance = new Filesystem(__DIR__ . '/structure');
         $instance->makeDirectory(__DIR__ . '/structure/level-one/level-two/level-three');
 
-        $this->assertDirectoryExists(__DIR__ . "/structure/level-one/level-two/level-three");
+        $this->assertDirectoryExists(__DIR__ . '/structure/level-one/level-two/level-three');
 
         // isso não causará efeito. diretório não precisa ser criado
         $instance->makeDirectory('level-one/level-two/level-three');
         $instance->makeDirectory(__DIR__ . '/structure/level-one/level-two/level-three');
 
-        rmdir(__DIR__ . "/structure/level-one/level-two/level-three");
+        rmdir(__DIR__ . '/structure/level-one/level-two/level-three');
     }
 
     /** @test */
@@ -190,6 +183,12 @@ class FilesystemDirectoriesTest extends TestCase
 
         $instance = new Filesystem(__DIR__ . '/structure');
         $instance->makeDirectory('/../../');
+    }
+    private function makeDir(string $path): void
+    {
+        if (is_dir($path) === false) {
+            mkdir($path, 0o777, true);
+        }
     }
 
     // /** @test */
