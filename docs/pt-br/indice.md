@@ -11,3 +11,4 @@ Bem vindo(a) à documentação da biblioteca Iquety Security. Aqui você encontr
 
 - [Filesystem](01-filesystem.md)
 - [Path](02-path.md)
+- [Evoluindo a biblioteca](99-evoluindo.md)

@@ -1,7 +1,7 @@
 # Path
 
-[◂ Filesystem](01-filesystem.md) | [Sumário da Documentação ▸](indice.md)
--- | --
+[◂ Filesystem](01-filesystem.md) | [Sumário da Documentação](indice.md) | [Evoluindo a biblioteca ▸](99-evoluindo.md)
+-- | -- | --
 
 ## Funcionalidades
 
@@ -54,5 +54,5 @@ Os métodos disponíveis são:
 - isLocalPath
 - isRelativePath
 
-[◂ Filesystem](01-filesystem.md) | [Sumário da Documentação ▸](indice.md)
--- | --
+[◂ Filesystem](01-filesystem.md) | [Sumário da Documentação](indice.md) | [Evoluindo a biblioteca ▸](99-evoluindo.md)
+-- | -- | --
