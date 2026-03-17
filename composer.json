@@ -4,6 +4,7 @@
     "description": "Secure implementations for critical native functions",
     "keywords": ["framework", "freep", "security"],
     "license": "MIT",
+    "minimum-stability": "stable",
     "require": {
         "php": "^8.4"
     },
@@ -30,7 +31,6 @@
         "preferred-install": "dist",
         "sort-packages": true
     },
-    "minimum-stability": "dev",
     "prefer-stable": true,
     "scripts" : {
         "test": "vendor/bin/phpunit --testdox",
